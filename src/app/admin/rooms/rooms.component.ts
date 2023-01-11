@@ -17,7 +17,7 @@ export class RoomsComponent implements OnInit {
     private router: Router
   ) {}
   ngOnInit() {
-    this.rooms = this.dataService.rooms;
+    this.dataService.getRooms().subscribe(rooms=>{this.rooms = rooms});
     this.activatedRoute.queryParams.subscribe((params) => {
       const { id } = params;
       if (id) {

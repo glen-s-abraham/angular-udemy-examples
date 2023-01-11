@@ -11,19 +11,31 @@ import { User } from 'src/app/models/User';
 export class UsersComponent implements OnInit{
   users!:User[];
   currentUser!:User;
+  action!:string;
   constructor(private dataService:DataService,private router:Router,private activatedRoute:ActivatedRoute){}
   ngOnInit(){
-    this.users = this.dataService.users;
+    this.dataService.getUsers().subscribe(users=>{
+      this.users = users;
+    });
     this.activatedRoute.queryParams.subscribe(params=>{
-      const {id} = params;
+      const {id,action} = params;
+      this.action = action;
       if(id){
         this.currentUser = this.users.find(user=>user.id===+id);
+
       }
     })
   }
   setUserDetail(id:number){
     this.router.navigate(['admin','users'],{
-      queryParams:{id}
+      queryParams:{id,action:'view'}
     })
+  }
+
+  addUser(){
+    this.router.navigate(['admin','users'],{
+      queryParams:{action:'add'}
+    })
+    this.currentUser = new User();
   }
 }
