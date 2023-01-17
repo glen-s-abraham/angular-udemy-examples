@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { Room } from 'src/app/models/Room';
 
 @Component({
@@ -8,5 +9,16 @@ import { Room } from 'src/app/models/Room';
 })
 export class RoomDetailComponent {
   @Input() room!: Room;
+
+  constructor(private router:Router){}
+
+  editRoom(){
+    this.router.navigate(['admin','rooms'],{
+      queryParams:{
+        id:this.room.id,
+        action:'edit'
+      }
+    })
+  }
 
 }

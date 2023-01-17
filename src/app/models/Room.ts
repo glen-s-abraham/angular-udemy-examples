@@ -13,14 +13,9 @@ export class LayoutCapacity {
 }
 
 export class Room {
-  id: number;
-  name: string;
-  capacities: LayoutCapacity[];
-  location: string;
-  constructor(id: number, name: string, capacities: LayoutCapacity[],location:string) {
-    this.id = id;
-    this.name = name;
-    this.capacities = capacities;
-    this.location = location;
-  }
+  id!: number;
+  name!: string;
+  capacities!: LayoutCapacity[];
+  location!: string;
+
 }

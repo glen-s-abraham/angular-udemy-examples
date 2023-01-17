@@ -14,6 +14,7 @@ export class UserEditComponent implements OnInit {
   message!: string;
   password!: string;
   password2!:string;
+  nameIsValid!:boolean;
   constructor(private dataService: DataService, private router: Router) {}
   onSubmit() {
     if (this.formUser.id == null) {
@@ -41,5 +42,12 @@ export class UserEditComponent implements OnInit {
 
   ngOnInit() {
     this.formUser = { ...this.user };
+    this.checkIfNameisValid();
+  }
+
+  checkIfNameisValid(){
+    if(this.formUser.name){
+      this.nameIsValid = this.formUser.name.trim().length>0;
+    }
   }
 }

@@ -22,7 +22,6 @@ export class UsersComponent implements OnInit{
       this.action = action;
       if(id){
         this.currentUser = this.users.find(user=>user.id===+id);
-
       }
     })
   }

@@ -16,8 +16,16 @@ export class DataService {
     const capacity2 = new LayoutCapacity(Layout.USHAPE,20);
     const capacity3 = new LayoutCapacity(Layout.THEATER,60);
     this.rooms = new Array<Room>();
-    const room1 = new Room(1,'First Room',[capacity1],'First Floor');
-    const room2 = new Room(2,'Second Room',[capacity2,capacity3],'Third Floor');
+    const room1 = new Room();
+    room1.id=1;
+    room1.name='First Room';
+    room1.capacities=[capacity1];
+    room1.location='First Floor';
+    const room2 = new Room();
+    room2.id=2;
+    room2.name='Second Room';
+    room2.capacities=[capacity2,capacity3];
+    room2.location='Third Floor';
     this.rooms.push(room1);
     this.rooms.push(room2);
     this.users = new Array<User>();
@@ -58,4 +66,22 @@ export class DataService {
     this.users.push(newUser);
     return of(newUser);
   }
+
+  updateRoom(room:Room):Observable<Room>{
+    const originalRoom  = this.rooms.find(r=>r.id===room.id);
+    originalRoom.name = room.name;
+    originalRoom.location = room.location;
+    originalRoom.capacities = room.capacities;
+    return of(originalRoom);
+  }
+
+  addRoom(room:Room):Observable<Room>{
+    const id = (this.users.sort((room1,room2)=>room2.id-room1.id)[0]).id+1;
+    const newRoom = room;
+    console.log(newRoom);
+    newRoom.id = id;
+    this.rooms.push(newRoom);
+    return of(newRoom);
+  }
+
 }
