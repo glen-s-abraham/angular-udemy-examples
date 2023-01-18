@@ -35,6 +35,12 @@
             ]
           },
           "configurations": {
+            "local":{
+              "fileReplacements": [{
+                "replace": "src/app/data.service.ts",
+                "with": "src/app/data.service.local.ts"
+              }]
+            },
             "production": {
               "budgets": [
                 {
@@ -48,7 +54,11 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [{
+                "replace":"src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }]
             },
             "development": {
               "buildOptimizer": false,
@@ -59,13 +69,16 @@
               "namedChunks": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
               "browserTarget": "RoomBooking:build:production"
+            },
+            "local": {
+              "browserTarget": "RoomBooking:build:local"
             },
             "development": {
               "browserTarget": "RoomBooking:build:development"

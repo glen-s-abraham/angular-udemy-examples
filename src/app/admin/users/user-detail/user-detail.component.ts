@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { DataService } from 'src/app/data.service';
 import { User } from 'src/app/models/User';
 
 @Component({
@@ -9,7 +10,7 @@ import { User } from 'src/app/models/User';
 })
 export class UserDetailComponent {
   @Input() user!:User
-  constructor(private router:Router){}
+  constructor(private router:Router,private dataService:DataService){}
   editUser(){
     this.router.navigate(['admin','users'],{
       queryParams:{
@@ -17,5 +18,10 @@ export class UserDetailComponent {
         action:'edit'
       }
     })
+  }
+  deleteUser(){
+    this.dataService.deleteUser(this.user.id).subscribe(next=>{
+      this.router.navigate(['admin','users'])
+    });
   }
 }

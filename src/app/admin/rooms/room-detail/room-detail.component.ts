@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { DataService } from 'src/app/data.service';
 import { Room } from 'src/app/models/Room';
 
 @Component({
@@ -10,7 +11,7 @@ import { Room } from 'src/app/models/Room';
 export class RoomDetailComponent {
   @Input() room!: Room;
 
-  constructor(private router:Router){}
+  constructor(private router:Router,private dataService:DataService){}
 
   editRoom(){
     this.router.navigate(['admin','rooms'],{
@@ -18,6 +19,12 @@ export class RoomDetailComponent {
         id:this.room.id,
         action:'edit'
       }
+    })
+  }
+
+  deleteRoom(){
+    this.dataService.deleteRoom(this.room.id).subscribe(next=>{
+      this.router.navigate(['admin','rooms']);
     })
   }
 

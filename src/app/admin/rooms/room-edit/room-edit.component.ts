@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { DataService } from 'src/app/data.service';
+import { FormResetService } from 'src/app/form-reset.service';
 import { Layout, LayoutCapacity, Room } from 'src/app/models/Room';
 
 @Component({
@@ -9,13 +11,22 @@ import { Layout, LayoutCapacity, Room } from 'src/app/models/Room';
   templateUrl: './room-edit.component.html',
   styleUrls: ['./room-edit.component.css']
 })
-export class RoomEditComponent implements OnInit{
+export class RoomEditComponent implements OnInit,OnDestroy{
   @Input() room!:Room;
   layouts = Object.keys(Layout);
   layoutEnum = Layout;
   roomForm:FormGroup;
-  constructor(private formBuilder:FormBuilder,private dataService:DataService,private router:Router){}
+  resetEventSubsription:Subscription;
+  constructor(private formBuilder:FormBuilder,private dataService:DataService,private router:Router,private formResetService:FormResetService){}
   ngOnInit() {
+    this.initForm();
+    this.resetEventSubsription=this.formResetService.resetRoomFormEvent.subscribe(room=>{
+      this.room = room;
+      this.initForm();
+    })
+  }
+
+  initForm(){
     console.log(this.room)
     this.roomForm = this.formBuilder.group({
       roomName:[this.room.name,Validators.required],
@@ -50,5 +61,8 @@ export class RoomEditComponent implements OnInit{
         this.router.navigate(['admin','rooms'],{queryParams:{id:next.id,action:'view'}})
       });
     }
+  }
+  ngOnDestroy(): void {
+    this.resetEventSubsription.unsubscribe();
   }
 }
