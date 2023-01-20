@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { Booking } from '../models/Booking';
+import { User } from '../models/User';
 
 @Component({
   selector: 'app-calendar',
@@ -29,6 +30,7 @@ export class CalendarComponent implements OnInit {
 
 
   }
+
   editBooking(id: number) {
     this.router.navigate(['editBooking'], {
       queryParams: {

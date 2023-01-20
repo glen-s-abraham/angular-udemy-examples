@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Booking } from './models/Booking';
 import { Layout, LayoutCapacity, Room } from './models/Room';
@@ -11,9 +12,17 @@ import { User } from './models/User';
 })
 export class DataService {
 
-  constructor(){}
+  constructor(private httpClient:HttpClient){}
   getRooms(): Observable<Array<Room>> {
-    return of(null);
+    return this.httpClient.get<Array<Room>>(environment.restUrl+"/api/rooms").pipe(
+      map(data=>{
+        const rooms = [];
+        for(let room of data){
+          rooms.push(Room.fromHttp(room));
+        }
+        return rooms;
+      })
+    );
   }
 
   getBookings(date:string): Observable<Array<Booking>> {
@@ -21,7 +30,15 @@ export class DataService {
   }
 
   getUsers(): Observable<Array<User>> {
-    return of(null);
+    return this.httpClient.get<Array<User>>(environment.restUrl+"/api/users").pipe(
+      map(data=>{
+        const users = new Array<User>();
+        for(const user of data){
+          users.push(User.fromHttp(user));
+        }
+        return users;
+      })
+    )
   }
 
   getBooking(id: number):Observable<Booking> {
@@ -65,4 +82,5 @@ export class DataService {
   deleteBooking(id: number): Observable<any> {
     return of(null);
   }
+
 }
