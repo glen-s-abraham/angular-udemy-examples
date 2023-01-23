@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs';
 import { DataService } from 'src/app/data.service';
 import { Booking } from 'src/app/models/Booking';
 import { Layout, Room } from 'src/app/models/Room';
@@ -16,22 +17,34 @@ export class EditBookingComponent implements OnInit {
   layouts = Object.keys(Layout);
   layoutEnum = Layout;
   users: Array<User>;
+  dataLoaded = false;
   constructor(
     private dataService: DataService,
     private activatedRoute: ActivatedRoute,
-    private router:Router
+    private router:Router,
   ) {}
   ngOnInit() {
-    this.dataService.getRooms().subscribe((next) => (this.rooms = next));
-    this.dataService.getUsers().subscribe((next) => (this.users = next));
-
+    this.rooms = this.activatedRoute.snapshot.data['rooms'];
+    this.users = this.activatedRoute.snapshot.data['users'];
+    console.log(this.rooms)
     const id = this.activatedRoute.snapshot.queryParams['id'];
     if (id) {
       this.dataService
         .getBooking(+id)
-        .subscribe((next) => (this.booking = next));
+        .pipe(
+          map(booking=>{
+            booking.room = this.rooms.find(({id})=>id===booking.room.id);
+            booking.user = this.users.find(({id})=>id===booking.user.id);
+            return booking;
+          })
+        )
+        .subscribe((next) => {
+          (this.booking = next)
+          this.dataLoaded = true;
+        });
     } else {
       this.booking = new Booking();
+      this.dataLoaded = true;
     }
   }
 

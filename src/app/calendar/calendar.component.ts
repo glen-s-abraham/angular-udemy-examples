@@ -13,21 +13,28 @@ import { User } from '../models/User';
 export class CalendarComponent implements OnInit {
   selectedDate: string;
   bookings: Array<Booking>;
+  dataLoaded:boolean=false;
   constructor(
     private dataService: DataService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
-  ngOnInit(): void {
+  loadData(){
     this.activatedRoute.queryParams.subscribe((params) => {
       this.selectedDate = params['date'];
       if (!this.selectedDate)
         this.selectedDate = formatDate(new Date(), 'yyyy-MM-dd', 'en-IN');
       this.dataService
       .getBookings(this.selectedDate)
-      .subscribe((bookings) => (this.bookings = bookings));
+      .subscribe((bookings) =>{
+        (this.bookings = bookings);
+        this.dataLoaded=true
+      });
     });
+  }
+  ngOnInit(): void {
 
+    this.loadData();
 
   }
 
@@ -44,7 +51,14 @@ export class CalendarComponent implements OnInit {
   deleteBooking(id: number) {
     this.dataService
       .deleteBooking(id)
-      .subscribe((next) => this.router.navigate(['']));
+      .subscribe({
+        next:(next) =>{
+         this.loadData();
+        },
+        error:err=>{
+          console.log(err);
+        }
+    });
   }
   dateChanged() {
     this.router.navigate([''], {

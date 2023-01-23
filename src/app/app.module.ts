@@ -16,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RoomEditComponent } from './admin/rooms/room-edit/room-edit.component';
 import { EditBookingComponent } from './calendar/edit-booking/edit-booking.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +29,8 @@ import { EditBookingComponent } from './calendar/edit-booking/edit-booking.compo
     UserDetailComponent,
     UserEditComponent,
     RoomEditComponent,
-    EditBookingComponent
+    EditBookingComponent,
+
   ],
   imports: [
     BrowserModule,

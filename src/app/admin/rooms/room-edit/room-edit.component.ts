@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -13,10 +13,13 @@ import { Layout, LayoutCapacity, Room } from 'src/app/models/Room';
 })
 export class RoomEditComponent implements OnInit,OnDestroy{
   @Input() room!:Room;
+  @Output() dataChangedEvent= new EventEmitter();
+  message = '';
   layouts = Object.keys(Layout);
   layoutEnum = Layout;
   roomForm:FormGroup;
   resetEventSubsription:Subscription;
+  loadingComponent:true;
   constructor(private formBuilder:FormBuilder,private dataService:DataService,private router:Router,private formResetService:FormResetService){}
   ngOnInit() {
     this.initForm();
@@ -52,11 +55,12 @@ export class RoomEditComponent implements OnInit,OnDestroy{
     console.log(this.roomForm)
     //call a amethod in dataservice to save room
     if(!this.room.id){
+      this.dataChangedEvent.emit()
       this.dataService.addRoom(this.room).subscribe(next=>{
         this.router.navigate(['admin','rooms'],{queryParams:{id:next.id,action:'view'}})
       });
-
     }else{
+      this.dataChangedEvent.emit()
       this.dataService.updateRoom(this.room).subscribe(next=>{
         this.router.navigate(['admin','rooms'],{queryParams:{id:next.id,action:'view'}})
       });

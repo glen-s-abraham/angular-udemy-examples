@@ -21,8 +21,8 @@
     <div *ngIf="loadingData===true">{{message}}</div>
   </div>
   <div class="col-6">
-    <app-user-detail *ngIf="action==='view'" [user]="currentUser"></app-user-detail>
-    <app-user-edit *ngIf="action==='edit'||action==='add'" [user]="currentUser"></app-user-edit>
+    <app-user-detail *ngIf="action==='view'" [user]="currentUser"  (dataChangedEvent)="loadData()"></app-user-detail>
+    <app-user-edit *ngIf="action==='edit'||action==='add'" [user]="currentUser" (dataChangedEvent)="loadData()"></app-user-edit>
   </div>
 </div>
 
