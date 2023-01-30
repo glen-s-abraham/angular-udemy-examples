@@ -1,5 +1,6 @@
 import { Component,OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from 'src/app/auth.service';
 import { DataService } from 'src/app/data.service';
 import { User } from 'src/app/models/User';
 
@@ -13,9 +14,10 @@ export class UsersComponent implements OnInit{
   currentUser!:User;
   action!:string;
   loadingData = true;
+  isAdminUser=false;
   message: string = 'Please wait...';
   reloadAttempts = 0;
-  constructor(private dataService:DataService,private router:Router,private activatedRoute:ActivatedRoute){}
+  constructor(private dataService:DataService,private router:Router,private activatedRoute:ActivatedRoute,private authService:AuthService){}
   loadData(){
     this.dataService.getUsers().subscribe({
       next:users=>{
@@ -42,6 +44,9 @@ export class UsersComponent implements OnInit{
   }
   ngOnInit(){
     this.loadData();
+    if(this.authService.role=== 'ADMIN'){
+      this.isAdminUser = true;
+    }
   }
   setUserDetail(id:number){
     this.router.navigate(['admin','users'],{

@@ -15,6 +15,7 @@ import { UserEditComponent } from './admin/users/user-edit/user-edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RoomEditComponent } from './admin/rooms/room-edit/room-edit.component';
 import { EditBookingComponent } from './calendar/edit-booking/edit-booking.component';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { EditBookingComponent } from './calendar/edit-booking/edit-booking.compo
     UserEditComponent,
     RoomEditComponent,
     EditBookingComponent,
+    LoginComponent,
 
   ],
   imports: [

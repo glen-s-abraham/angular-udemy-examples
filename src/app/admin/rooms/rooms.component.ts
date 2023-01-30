@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from 'src/app/auth.service';
 import { DataService } from 'src/app/data.service';
 import { FormResetService } from 'src/app/form-reset.service';
 import { Room } from 'src/app/models/Room';
@@ -16,11 +17,13 @@ export class RoomsComponent implements OnInit {
   loadingData: boolean = true;
   reloadAttempts:number=0;
   message: string = 'Please wait...';
+  isAdminUser=false;
   constructor(
     private dataService: DataService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private formResetService: FormResetService
+    private formResetService: FormResetService,
+    private authService:AuthService
   ) {}
 
   loadData() {
@@ -55,6 +58,9 @@ export class RoomsComponent implements OnInit {
   }
   ngOnInit() {
     this.loadData();
+    if(this.authService.role==='ADMIN'){
+      this.isAdminUser = true;
+    }
   }
 
   setRoom(id: number) {

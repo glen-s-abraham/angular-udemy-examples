@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -14,7 +14,7 @@ export class DataService {
   constructor(private httpClient: HttpClient) {}
   getRooms(): Observable<Array<Room>> {
     return this.httpClient
-      .get<Array<Room>>(environment.restUrl + '/api/rooms')
+      .get<Array<Room>>(environment.restUrl + '/api/rooms',{withCredentials:true})
       .pipe(
         map((data) => {
           const rooms = [];
@@ -42,7 +42,7 @@ export class DataService {
 
   getUsers(): Observable<Array<User>> {
     return this.httpClient
-      .get<Array<User>>(environment.restUrl + '/api/users')
+      .get<Array<User>>(environment.restUrl + '/api/users',{withCredentials:true})
       .pipe(
         map((data) => {
           const users = new Array<User>();
@@ -60,14 +60,15 @@ export class DataService {
       .pipe(map((data) => Booking.fromHttp(data)));
   }
   updateUser(user: User): Observable<User> {
-    return this.httpClient.put<User>(environment.restUrl + '/api/users', user);
+    return this.httpClient.put<User>(environment.restUrl + '/api/users', user,{withCredentials:true});
   }
 
   addUser(user: User, password: string): Observable<User> {
     const fullUser = { ...user, password };
     return this.httpClient.post<User>(
       environment.restUrl + '/api/users',
-      fullUser
+      fullUser,
+      {withCredentials:true}
     );
   }
 
@@ -93,7 +94,8 @@ export class DataService {
   updateRoom(room: Room): Observable<Room> {
     return this.httpClient.put<Room>(
       environment.restUrl + '/api/rooms',
-      this.getCorrectedRoom(room)
+      this.getCorrectedRoom(room),
+      {withCredentials:true}
     );
   }
 
@@ -112,7 +114,7 @@ export class DataService {
     return of(null);
   }
   deleteUser(id: number): Observable<any> {
-    return this.httpClient.delete(environment.restUrl + '/api/users/' + id);
+    return this.httpClient.delete(environment.restUrl + '/api/users/' + id,{withCredentials:true});
   }
 
   saveBooking(booking: Booking): Observable<Booking> {
@@ -125,5 +127,23 @@ export class DataService {
 
   deleteBooking(id: number): Observable<any> {
     return this.httpClient.delete(environment.restUrl + '/api/bookings/' + id);
+  }
+
+  validateUser(name:string,password:string):Observable<{result:string}>{
+    const authData = btoa(`${name}:${password}`);
+    const headers = new HttpHeaders().append('Authorization','Basic '+authData);
+    return this.httpClient.get<{result:string}>(environment.restUrl+"/api/basicAuth/validate",{
+      headers,
+      withCredentials:true
+    })
+  }
+
+  getRole():Observable<{role:string}>{
+    const headers = new HttpHeaders().append('X-Requested-With','XMLHttpRequest');
+    return this.httpClient.get<{role:string}>(environment.restUrl+"/api/users/currentUserRole",{withCredentials:true,headers});
+  }
+
+  logout():Observable<String>{
+    return this.httpClient.get<String>(environment.restUrl+"/api/users/logout",{withCredentials:true});
   }
 }

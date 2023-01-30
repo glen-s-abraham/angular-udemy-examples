@@ -5,7 +5,7 @@
   <input type="date" [(ngModel)]="selectedDate" (change)="dateChanged()" />
 </h2>
 
-<a class="btn btn-primary mt-3 mb-5" (click)="saveBooking()">New Booking</a>
+<a class="btn btn-primary mt-3 mb-5" (click)="saveBooking()" *ngIf="isAdminUser">New Booking</a>
 
 <div *ngIf="dataLoaded">
   <!-- only show this h3 if there are no bookings! -->
@@ -48,8 +48,8 @@
           <p>Participants: {{ booking.participants }}</p>
         </div>
         <div class="col-6">
-          <a class="btn btn-warning" (click)="editBooking(booking.id)">Amend</a>
-          <a class="btn btn-danger" (click)="deleteBooking(booking.id)"
+          <a class="btn btn-warning" (click)="editBooking(booking.id)" *ngIf="isAdminUser">Amend</a>
+          <a class="btn btn-danger" (click)="deleteBooking(booking.id)" *ngIf="isAdminUser"
             >Cancel</a
           >
         </div>

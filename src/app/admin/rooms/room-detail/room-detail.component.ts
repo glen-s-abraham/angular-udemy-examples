@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/auth.service';
 import { DataService } from 'src/app/data.service';
 import { Room } from 'src/app/models/Room';
 
@@ -8,13 +9,17 @@ import { Room } from 'src/app/models/Room';
   templateUrl: './room-detail.component.html',
   styleUrls: ['./room-detail.component.css'],
 })
-export class RoomDetailComponent {
+export class RoomDetailComponent implements OnInit{
   @Input() room!: Room;
   @Output() dataChangedEvent = new EventEmitter();
 
   message = '';
+  isAdminUser=false;
+  constructor(private router: Router, private dataService: DataService,private authService:AuthService) {}
 
-  constructor(private router: Router, private dataService: DataService) {}
+  ngOnInit(): void {
+    if(this.authService.role==='ADMIN') this.isAdminUser=true;
+  }
 
   editRoom() {
     this.router.navigate(['admin', 'rooms'], {

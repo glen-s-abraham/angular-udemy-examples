@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 import { DataService } from '../data.service';
 import { Booking } from '../models/Booking';
 import { User } from '../models/User';
@@ -14,10 +15,12 @@ export class CalendarComponent implements OnInit {
   selectedDate: string;
   bookings: Array<Booking>;
   dataLoaded:boolean=false;
+  isAdminUser=false;
   constructor(
     private dataService: DataService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private authService:AuthService
   ) {}
   loadData(){
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -35,7 +38,7 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
 
     this.loadData();
-
+    if(this.authService.role==='ADMIN') this.isAdminUser = true;
   }
 
   editBooking(id: number) {

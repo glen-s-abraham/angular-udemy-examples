@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, retry } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Booking } from './models/Booking';
 import { Layout, LayoutCapacity, Room } from './models/Room';
@@ -163,4 +163,18 @@ export class DataService {
     );
     return of(null);
   }
+
+  validateUser(name:string,password:string):Observable<{result:string}>{
+    return of({result:'ok'});
+  }
+
+  getRole():Observable<{role:string}>{
+    return of({role:'ADMIN'});
+  }
+
+  logout():Observable<String>{
+    return of('');
+  }
 }
+
+
